@@ -18,10 +18,16 @@ export default function Home() {
 
   function selectedCustomer(customer: Customer) {
     setCustomer(customer);
+    setVisible("form")
   }
 
   function deletedCustomer(customer: Customer) {
     console.log("Excluindo..." + customer.getName);
+  }
+
+  function newCustomer(){
+    setCustomer(Customer.empty())
+    setVisible("form")
   }
 
   function saveCustomer(customer: Customer) {
@@ -29,13 +35,15 @@ export default function Home() {
     setVisible("table");
   }
 
+  
+
   return (
     <div className="flex justify-center items-center h-screen bg-gradient-to-r from-blue-500 to-purple-500 text-white ">
       <Layout title="Cadastro Simples">
         {visible == "table" ? (
           <>
             <div className="flex justify-end">
-              <Button className="mb-4" onClick={() => setVisible("form")}>
+              <Button className="mb-4" onClick={newCustomer}>
                 Novo Cliente
               </Button>
             </div>
@@ -48,7 +56,7 @@ export default function Home() {
           </>
         ) : (
           <Form
-            customer={customers[0]}
+            customer={customer}
             changeCustomer={saveCustomer}
             canceled={() => setVisible("table")}
           />
