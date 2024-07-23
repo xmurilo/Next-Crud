@@ -6,14 +6,14 @@ import useTableOrForm from "./useTableOrForm";
 
 export default function useCustomer() {
   // Memoize 'repo' to prevent it from being recreated on every render
-  const repo: RepositoryCustomer = useMemo(() => new CollectionCustomer(), []);
+  const repo: RepositoryCustomer = new CollectionCustomer();
 
-  const { showForm, showTable } = useTableOrForm();
+  const { visibleTable, showForm, showTable } = useTableOrForm();
 
   const [customer, setCustomer] = useState<Customer>(Customer.empty());
   const [customers, setCustomers] = useState<Customer[]>([]);
 
-  useEffect(getAllCustomers, [repo, showTable]);
+  useEffect(getAllCustomers, []);
 
   function getAllCustomers() {
     repo.getAll().then(customers => {
@@ -45,10 +45,12 @@ export default function useCustomer() {
   return {
     customer,
     customers,
+    visibleTable,
     newCustomer,
     saveCustomer,
     deletedCustomer,
     selectedCustomer,
     getAllCustomers,
+    showTable,
   };
 }
