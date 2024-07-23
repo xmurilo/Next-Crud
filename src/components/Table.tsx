@@ -1,10 +1,10 @@
-import Client from "../core/Client";
+import Customer from "../core/Customer";
 import { EditionIcon } from "./Icons";
 import { TrashIcon } from "./Icons";
 interface TableProps {
-  clients: Client[];
-  selectedCustomer?: (client: Client) => void;
-  deletedCustomer?: (client: Client) => void;
+  customers: Customer[];
+  selectedCustomer?: (customer: Customer) => void;
+  deletedCustomer?: (customer: Customer) => void;
 }
 
 export default function Table(props: TableProps) {
@@ -22,25 +22,25 @@ export default function Table(props: TableProps) {
   }
 
   function renderData(): React.ReactNode {
-    return props.clients?.map((client, i) => {
+    return props.customers?.map((customer, i) => {
       return (
-        <tr key={client.getId} className={`${i % 2 == 0 ? "bg-purple-200" : "bg-purple-100"}`}>
-          <td className="text-left p-4 ">{client.getId}</td>
-          <td className="text-left p-4 ">{client.getName}</td>
-          <td className="text-left p-4 ">{client.getAge}</td>
-          {showActions ? renderActions(client) : false}
+        <tr key={customer.getId} className={`${i % 2 == 0 ? "bg-purple-200" : "bg-purple-100"}`}>
+          <td className="text-left p-4 ">{customer.getId}</td>
+          <td className="text-left p-4 ">{customer.getName}</td>
+          <td className="text-left p-4 ">{customer.getAge}</td>
+          {showActions ? renderActions(customer) : false}
         </tr>
       );
     });
   }
 
-  function renderActions(client: Client) {
+  function renderActions(customer: Customer) {
     return (
       <td className="flex justify-center">
         {props.selectedCustomer ? (
           <button
             className={`flex justify-center items-center text-green-600 rounded-full hover:bg-purple-50 p-2 m-1`}
-            onClick={() => props.selectedCustomer?.(client)}
+            onClick={() => props.selectedCustomer?.(customer)}
           >
             {EditionIcon}
           </button>
@@ -51,7 +51,7 @@ export default function Table(props: TableProps) {
         {props.deletedCustomer ? (
           <button
             className={`flex justify-center items-center text-red-500 rounded-full hover:bg-purple-50 p-2 m-1`}
-            onClick={() => props.deletedCustomer?.(client)}
+            onClick={() => props.deletedCustomer?.(customer)}
           >
             {TrashIcon}
           </button>
