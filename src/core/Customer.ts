@@ -1,27 +1,40 @@
 export default class Customer {
-  private id: string;
-  private name: string;
-  private age: number;
+  private _id: string;
+  private _name: string;
+  private _age: number;
 
   constructor(name: string, age: number, id: string | null = null) {
-    this.name = name;
-    this.age = age;
-    this.id = id || "";
+    this._name = name;
+    this._age = age;
+    this._id = id || "";
   }
 
   static empty() {
     return new Customer("", 0);
   }
 
-  get getId() {
-    return this.id;
+  // Getters and setters
+  get id() {
+    return this._id;
   }
 
-  get getName() {
-    return this.name;
+  set id(value: string) {
+    this._id = value;
   }
 
-  get getAge() {
-    return this.age;
+  get name() {
+    return this._name;
+  }
+
+  set name(value: string) {
+    this._name = value;
+  }
+
+  get age() {
+    return this._age;
+  }
+
+  set age(value: number) {
+    this._age = value;
   }
 }
