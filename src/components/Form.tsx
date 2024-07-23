@@ -10,10 +10,10 @@ interface FormProps {
 }
 
 export default function Form(props: FormProps) {
-  const id = props.customer?.getId;
+  const id = props.customer?.id;
 
-  const [name, setName] = useState(props.customer?.getName ?? "");
-  const [age, setAge] = useState(props.customer?.getAge ?? 0);
+  const [name, setName] = useState(props.customer?.name ?? "");
+  const [age, setAge] = useState(props.customer?.age ?? 0);
 
   return (
     <div>
