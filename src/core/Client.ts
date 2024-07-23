@@ -6,7 +6,7 @@ export default class Client {
   constructor(name: string, age: number, id: string | null = null) {
     this.name = name;
     this.age = age;
-    this.id = id || "default-id"; // Provide a default string value if id is null
+    this.id = id || "";
   }
 
   static empty() {
