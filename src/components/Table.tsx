@@ -24,10 +24,10 @@ export default function Table(props: TableProps) {
   function renderData(): React.ReactNode {
     return props.customers?.map((customer, i) => {
       return (
-        <tr key={customer.getId} className={`${i % 2 == 0 ? "bg-purple-200" : "bg-purple-100"}`}>
-          <td className="text-left p-4 ">{customer.getId}</td>
-          <td className="text-left p-4 ">{customer.getName}</td>
-          <td className="text-left p-4 ">{customer.getAge}</td>
+        <tr key={customer.id} className={`${i % 2 == 0 ? "bg-purple-200" : "bg-purple-100"}`}>
+          <td className="text-left p-4 ">{customer.id}</td>
+          <td className="text-left p-4 ">{customer.name}</td>
+          <td className="text-left p-4 ">{customer.age}</td>
           {showActions ? renderActions(customer) : false}
         </tr>
       );
