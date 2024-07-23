@@ -1,29 +1,30 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Customer from "../core/Customer";
 import RepositoryCustomer from "../core/RepositoryCustomer";
 import CollectionCustomer from "../backend/db/CollectionCustomer";
 import useTableOrForm from "./useTableOrForm";
 
 export default function useCustomer() {
-  const repo: RepositoryCustomer = new CollectionCustomer();
+  // Memoize 'repo' to prevent it from being recreated on every render
+  const repo: RepositoryCustomer = useMemo(() => new CollectionCustomer(), []);
 
-  const {showForm, showTable } = useTableOrForm();
+  const { showForm, showTable } = useTableOrForm();
 
   const [customer, setCustomer] = useState<Customer>(Customer.empty());
   const [customers, setCustomers] = useState<Customer[]>([]);
 
-  useEffect(getAllCustomers, []);
+  useEffect(getAllCustomers, [repo, showTable]);
 
   function getAllCustomers() {
     repo.getAll().then(customers => {
       setCustomers(customers);
-      showTable()
+      showTable();
     });
   }
 
   function selectedCustomer(customer: Customer) {
     setCustomer(customer);
-    showForm()
+    showForm();
   }
 
   async function deletedCustomer(customer: Customer) {
@@ -33,7 +34,7 @@ export default function useCustomer() {
 
   function newCustomer() {
     setCustomer(Customer.empty());
-    showForm()
+    showForm();
   }
 
   async function saveCustomer(customer: Customer) {
