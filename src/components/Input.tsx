@@ -10,8 +10,11 @@ interface InputProps {
 export default function Input(props: InputProps) {
   return (
     <div className={`flex flex-col ${props.className}`}>
-      <label className="mb-2">{props.text}</label>
+      <label htmlFor={props.text} className="mb-2">
+        {props.text}
+      </label>
       <input
+        id={props.text}
         type={props.type ?? "text"}
         value={props.value}
         readOnly={props.onlyRead}
