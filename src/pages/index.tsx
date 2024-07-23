@@ -1,41 +1,47 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../components/Button";
 import Form from "../components/Form";
 import Layout from "../components/Layout";
 import Table from "../components/Table";
 import Customer from "../core/Customer";
+import RepositoryCustomer from "../core/RepositoryCustomer";
+import CollectionCustomer from "../backend/db/CollectionCustomer";
 
 export default function Home() {
-  const [visible, setVisible] = useState<"table" | "form">("table");
-  const [customer, setCustomer] = useState<Customer>(Customer.empty());
+  const repo: RepositoryCustomer = new CollectionCustomer();
 
-  const customers = [
-    new Customer("Ana", 34, "1"),
-    new Customer("Bia", 45, "2"),
-    new Customer("Carlos", 23, "3"),
-    new Customer("Daniel", 54, "4"),
-  ];
+  const [customer, setCustomer] = useState<Customer>(Customer.empty());
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [visible, setVisible] = useState<"table" | "form">("table");
+
+  useEffect(getAllCustomers, []);
+
+  function getAllCustomers() {
+    repo.getAll().then(customers => {
+      setCustomers(customers);
+      setVisible("table");
+    });
+  }
 
   function selectedCustomer(customer: Customer) {
     setCustomer(customer);
-    setVisible("form")
+    setVisible("form");
   }
 
-  function deletedCustomer(customer: Customer) {
-    console.log("Excluindo..." + customer.getName);
+  async function deletedCustomer(customer: Customer) {
+    await repo.delete(customer);
+    getAllCustomers();
   }
 
-  function newCustomer(){
-    setCustomer(Customer.empty())
-    setVisible("form")
+  function newCustomer() {
+    setCustomer(Customer.empty());
+    setVisible("form");
   }
 
-  function saveCustomer(customer: Customer) {
-    console.log(customer);
-    setVisible("table");
+  async function saveCustomer(customer: Customer) {
+    await repo.save(customer);
+    getAllCustomers();
   }
-
-  
 
   return (
     <div className="flex justify-center items-center h-screen bg-gradient-to-r from-blue-500 to-purple-500 text-white ">
