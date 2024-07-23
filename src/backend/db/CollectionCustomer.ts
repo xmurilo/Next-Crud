@@ -1,48 +1,52 @@
+import { collection, getDocs, addDoc, doc, setDoc, deleteDoc } from "firebase/firestore";
 import Customer from "@/src/core/Customer";
 import RepositoryCustomer from "@/src/core/RepositoryCustomer";
-import { firestore } from "../config";
-import { collection } from "firebase/firestore";
-import firebase from "firebase/compat/app";
+import { db } from "../config";
 
 export default class CollectionCustomer implements RepositoryCustomer {
   converter = {
     toFirestore(customer: Customer) {
       return {
-        name: customer.getName,
-        age: customer.getAge,
+        name: customer.name,
+        age: customer.age,
       };
     },
 
-    fromFirestore(
-      snapshot: firebase.firestore.QueryDocumentSnapshot,
-      options: firebase.firestore.SnapshotOptions,
-    ): Customer {
+    fromFirestore(snapshot: any, options: any): Customer {
       const data = snapshot.data(options);
       return new Customer(data.name, data.age, snapshot.id);
     },
   };
 
+  private collection() {
+    return collection(db, "customers").withConverter(this.converter);
+  }
+
   async save(customer: Customer): Promise<Customer> {
-    if (customer?.getId) {
-      await this.collection().doc(customer.getId).set(customer);
-      return customer;
+    if (customer.id) {
+      // * Se o ID existe, atualiza o documento
+      const customerRef = doc(db, "customers", customer.id).withConverter(this.converter);
+      // * O método setDoc atualiza o documento, se ele já existir, ou cria um novo, se não existir
+      await setDoc(customerRef, customer);
     } else {
-      const docRef = await this.collection().add(customer);
-      const doc = await docRef.get();
-      return doc.data() as Customer;
+      // * Se o ID não existe, cria um novo documento
+      const docRef = await addDoc(this.collection(), customer);
+       // * Atualiza o ID do objeto com o ID gerado pelo Firestore
+      customer.id = docRef.id;
     }
+    return customer;
   }
 
   async delete(customer: Customer): Promise<void> {
-    return this.collection().doc(customer.getId).delete();
+    if (!customer.id) {
+      throw new Error("Customer ID is missing");
+    }
+    await deleteDoc(doc(db, "customers", customer.id));
   }
 
   async getAll(): Promise<Customer[]> {
-    const query = await this.collection().get();
-    return query.docs.map(doc => doc.data()) ?? [];
-  }
-
-  private collection() {
-    return firebase.firestore().collection("customers").withConverter(this.converter);
+    const querySnapshot = await getDocs(this.collection());
+    // * O método map percorre todos os documentos retornados e converte cada um deles para um objeto Customer
+    return querySnapshot.docs.map(doc => this.converter.fromFirestore(doc, {}));
   }
 }
