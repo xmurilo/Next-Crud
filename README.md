@@ -7,7 +7,7 @@ Next-CRUD is a robust web application built with Next.js, leveraging Firebase fo
 ## Features
 - **CRUD Operations:** Allows users to create, read, update, and delete customer data.
 - **Firebase Integration:** Utilizes Firebase Firestore as a database solution.
-- **Responsive Design:** Styled with TailwindCSS for a responsive and modern UI.
+- **Responsive Design:** Styled with TailwindCSS for a modern UI.
 
 ## Getting Started
 
